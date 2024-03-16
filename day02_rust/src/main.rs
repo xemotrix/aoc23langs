@@ -10,14 +10,14 @@ fn check_color(r: i32, g: i32, b: i32) -> EnoughBalls {
     if r > 12 || g > 13 || b > 14 {
         return EnoughBalls::No;
     }
-    return EnoughBalls::Yes;
+    EnoughBalls::Yes
 }
 
 fn calc_line(x: &str) -> Result<EnoughBalls> {
     let (mut r, mut g, mut b) = (0, 0, 0);
     for (i, c) in x.chars().enumerate() {
         match c {
-            c if c.is_digit(10) => {
+            c if c.is_ascii_digit() => {
                 let nstr = x[i..]
                     .chars()
                     .take_while(|c| !c.is_whitespace())
@@ -45,11 +45,11 @@ fn calc_line(x: &str) -> Result<EnoughBalls> {
     Ok(check_color(r, g, b))
 }
 
-fn part1(contents: String) -> Result<i32> {
+fn part1(contents: &str) -> Result<i32> {
     let mut total: i32 = 0;
     for (i, l) in contents.lines().enumerate() {
         let x = l
-            .split(":")
+            .split(':')
             .nth(1)
             .ok_or_else(|| anyhow::anyhow!("No value"))?;
         match calc_line(x)? {
@@ -57,7 +57,7 @@ fn part1(contents: String) -> Result<i32> {
             EnoughBalls::No => continue,
         }
     }
-    return Ok(total);
+    Ok(total)
 }
 
 fn calc_line2(x: &str) -> Result<(i32, i32, i32)> {
@@ -65,7 +65,7 @@ fn calc_line2(x: &str) -> Result<(i32, i32, i32)> {
     let (mut set_r, mut set_g, mut set_b) = (false, false, false);
     for (i, c) in x.chars().enumerate() {
         match c {
-            c if c.is_digit(10) => {
+            c if c.is_ascii_digit() => {
                 let nstr = x[i..]
                     .chars()
                     .take_while(|c| !c.is_whitespace())
@@ -100,23 +100,23 @@ fn calc_line2(x: &str) -> Result<(i32, i32, i32)> {
     Ok((max_r, max_g, max_b))
 }
 
-fn part2(contents: String) -> Result<i32> {
+fn part2(contents: &str) -> Result<i32> {
     let mut total: i32 = 0;
     for l in contents.lines() {
         let x = l
-            .split(":")
+            .split(':')
             .nth(1)
             .ok_or_else(|| anyhow::anyhow!("No value"))?;
         let (r, g, b) = calc_line2(x)?;
         total += r * g * b;
     }
-    return Ok(total);
+    Ok(total)
 }
 
 fn main() -> Result<()> {
     let file_path = "input.txt";
     let contents = fs::read_to_string(file_path)?;
-    println!("Part 1: {}", part1(contents.clone())?);
-    println!("Part 2: {}", part2(contents)?);
+    println!("Part 1: {}", part1(&contents)?);
+    println!("Part 2: {}", part2(&contents)?);
     Ok(())
 }

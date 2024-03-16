@@ -27,16 +27,16 @@ defmodule Main do
   def update_card_count(fac, nw, []), do: List.duplicate(fac, nw)
   def update_card_count(fac, nw, [cc | ccs]), do: [cc + fac | update_card_count(fac, nw - 1, ccs)]
 
-  def aux([_], [cc]), do: cc
+  def part2([_], [cc]), do: cc
 
-  def aux([score | scores], [cc | ccs]) do
+  def part2([score | scores], [cc | ccs]) do
     updated = update_card_count(cc, score, ccs)
-    cc + aux(scores, updated)
+    cc + part2(scores, updated)
   end
 
   def part2(input) do
     cc = List.duplicate(1, Enum.count(input))
-    aux(input, cc)
+    part2(input, cc)
   end
 
   def part1(input) do
