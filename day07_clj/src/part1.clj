@@ -8,8 +8,7 @@
                        (reduce #(merge-with + %1 %2))
                        (map val))]
     (assoc hand
-           :score (reduce + (map square score-arr))
-           :max (apply max score-arr))))
+           :score (reduce + (map square score-arr)))))
 
 (defn compare-high-card [cards1 cards2 value-map]
   (if (empty? cards1)
