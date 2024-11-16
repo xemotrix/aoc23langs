@@ -33,20 +33,6 @@ pub fn agg2(l: List(List(Int))) -> List(Int) {
   x + y
 }
 
-pub fn call_a() -> Result(Int, String) {
-  Ok(1)
-}
-
-pub fn call_b() -> Result(Int, String) {
-  Error("what")
-}
-
-pub fn do_things() -> Result(Int, String) {
-  use n1 <- result.try(call_a())
-  use n2 <- result.try(call_b())
-  Ok(n1 + n2)
-}
-
 pub fn main() {
   let input =
     simplifile.read("input.txt")
