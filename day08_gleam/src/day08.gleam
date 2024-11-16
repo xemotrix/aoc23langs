@@ -14,6 +14,39 @@ pub type Move {
   R
 }
 
+pub fn add_one(l: List(Int)) -> List(Int) {
+  list.map(l, fn(x) { x + 1 })
+}
+
+pub fn add_two(l: List(Int)) -> List(Int) {
+  use n <- list.map(l)
+  n + 2
+}
+
+pub fn agg1(l: List(List(Int))) -> List(Int) {
+  list.map(l, fn(subl) { list.fold(subl, 0, fn(x, y) { x + y }) })
+}
+
+pub fn agg2(l: List(List(Int))) -> List(Int) {
+  use subl <- list.map(l)
+  use x, y <- list.fold(subl, 0)
+  x + y
+}
+
+pub fn call_a() -> Result(Int, String) {
+  Ok(1)
+}
+
+pub fn call_b() -> Result(Int, String) {
+  Error("what")
+}
+
+pub fn do_things() -> Result(Int, String) {
+  use n1 <- result.try(call_a())
+  use n2 <- result.try(call_b())
+  Ok(n1 + n2)
+}
+
 pub fn main() {
   let input =
     simplifile.read("input.txt")
