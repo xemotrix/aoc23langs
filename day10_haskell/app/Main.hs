@@ -33,17 +33,19 @@ findEnclosed :: Set Cell -> (Int, String) -> Int
 findEnclosed visited (y, str) =
   countGaps $ simplify str
   where
-    simplify = reduceElbows [] . filter (/= '-') . maskLoop y visited
+    simplify = reduceElbows [] . filter (/= '-') . maskLoop visited y
 
 reduceElbows :: String -> String -> String
-reduceElbows acc [] = reverse acc
-reduceElbows acc ('|' : cs) = reduceElbows ('|' : acc) cs
-reduceElbows acc ('F' : 'J' : cs) = reduceElbows ('|' : acc) cs
-reduceElbows acc ('L' : '7' : cs) = reduceElbows ('|' : acc) cs
-reduceElbows acc ('F' : '7' : cs) = reduceElbows acc cs
-reduceElbows acc ('L' : 'J' : cs) = reduceElbows acc cs
-reduceElbows acc ('.' : cs) = reduceElbows ('.' : acc) cs
-reduceElbows acc (_ : cs) = reduceElbows acc cs
+reduceElbows acc input =
+  case input of
+    [] -> reverse acc
+    ('|' : cs) -> reduceElbows ('|' : acc) cs
+    ('F' : 'J' : cs) -> reduceElbows ('|' : acc) cs
+    ('L' : '7' : cs) -> reduceElbows ('|' : acc) cs
+    ('F' : '7' : cs) -> reduceElbows acc cs
+    ('L' : 'J' : cs) -> reduceElbows acc cs
+    ('.' : cs) -> reduceElbows ('.' : acc) cs
+    (_ : cs) -> reduceElbows acc cs
 
 countGaps :: String -> Int
 countGaps = countGaps' 0 0
@@ -57,8 +59,8 @@ countGaps' acc crosses input =
   where
     newAcc = if odd crosses then acc + 1 else acc
 
-maskLoop :: Int -> Set Cell -> String -> String
-maskLoop y visited line = do
+maskLoop :: Set Cell -> Int -> String -> String
+maskLoop visited y line = do
   (x, c) <- enumerate line
   return $ if Set.member (Cell x y) visited then c else '.'
 
